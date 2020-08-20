@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "MyList",
-    "slug": "MyList",
+    "name": "Gas Station",
+    "slug": "gasstation",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,6 +18,10 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.travelingtechguy.gasstation",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
