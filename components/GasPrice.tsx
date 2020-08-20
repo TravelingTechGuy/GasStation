@@ -5,7 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 
 import Colors from '../config/colors';
 
-
 interface Prices {
   low: number,
   medium: number,
