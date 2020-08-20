@@ -10,9 +10,9 @@ const Stack = createStackNavigator();
 
 export default () => 
   <NavigationContainer>
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown: false}} >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
     </Stack.Navigator>
     <StatusBar style="light" />
-  </NavigationContainer>
+  </NavigationContainer>;
