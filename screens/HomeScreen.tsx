@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Props } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -8,7 +8,7 @@ import Colors from '../config/colors';
 export default ({navigation, route}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.settings} onPress={() => navigation.navigate('Settings')}>
+      <TouchableOpacity style={styles.topLeftButton} onPress={() => navigation.navigate('Settings')}>
         <Ionicons name="md-settings" size={32} color={Colors.offWhite} />
       </TouchableOpacity>
       <Text style={styles.headerText}>
@@ -32,9 +32,10 @@ const styles = StyleSheet.create({
     fontSize: 27,
     textAlign: 'center',
     color: Colors.offWhite,
-    paddingBottom: 10
+    position: 'absolute',
+    top: 50
   },
-  settings: {
+  topLeftButton: {
     position: 'absolute',
     top: 30,
     left: 20,
