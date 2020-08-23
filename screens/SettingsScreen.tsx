@@ -1,54 +1,53 @@
 import React, {useState} from 'react';
-import { Button, View, StyleSheet, Text, Switch, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import SwitchSelector from 'react-native-switch-selector';
 import { Ionicons } from '@expo/vector-icons';
 
+import useSettings from '../hooks/useSettings';
 import Colors from '../config/colors';
 
 export default ({navigation, route}) => {
-  const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
-  const [interval, setInterval] = useState<number>(10);
-  
-  const saveSettings = () => {
+  const {settings, saveSettings} = useSettings();
+  const [interval, setInterval] = useState(settings?.interval || 0);
+
+  const options = [
+    { label: 'No', value: 0 },
+    { label: '1 minute', value: 1 },
+    { label: '5 minutes', value: 5 },
+    { label: '10 minutes', value: 10 },
+    { label: '3 minutes', value: 30 },
+    { label: '1 hour', value: 60 },
+  ];
+
+  const index = options.findIndex(o => o.value === interval);
+
+  const saveSettingsAndGoBack = () => {
+    saveSettings({interval});
     navigation.goBack()
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.topLeftButton} onPress={saveSettings}>
+      <TouchableOpacity style={styles.topLeftButton} onPress={saveSettingsAndGoBack}>
         <Ionicons name="md-save" size={32} color={Colors.offWhite} />
       </TouchableOpacity>
       <Text style={styles.headerText}>Settings Screen</Text>
-      <View style={{flexDirection: 'column'}}>
+      <View style={styles.form}>
         <Text style={styles.text}>Would you like to auto refresh the prices:</Text>
-        <Switch
-          trackColor={{ true: Colors.green, false: Colors.red }}
-          thumbColor={autoRefresh ? Colors.green : Colors.red}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={() => setAutoRefresh(!autoRefresh)}
-          value={autoRefresh}
-          style={styles.switch}
+        <SwitchSelector
+          style={{width: '90%'}}
+          options={options}
+          initial={index}
+          onPress={(value: number) => setInterval(value)}
+          backgroundColor={Colors.blue}
+          selectedColor={Colors.light}
         />
       </View>
-      {
-        autoRefresh
-        ?
-        <>
-          <Text style={styles.text}>Interval in minutes:</Text>
-          <TextInput 
-            style={styles.textInput}
-            onChangeText={text => setInterval(parseInt(text, 10) || 0)}
-            value={interval.toString() || '0'}
-            editable={autoRefresh}
-          />
-        </>
-        :
-        null
-      }
     </View>
   );
 };
 
-const styles =StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -57,25 +56,25 @@ const styles =StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  form: {
+    flexDirection: 'column',
+    padding: 10,
+    alignItems: 'center'
+  },
   headerText: {
     fontSize: 27,
     textAlign: 'center',
     color: Colors.offWhite,
     position: 'absolute',
-    top: 50
+    top: 60
   },
   switch: {
-    backgroundColor: Colors.light
+    width: '90%'
   },
   text: {
-    color: Colors.light,
-  },
-  textInput: {
-    height: 20,
-    borderStyle: 'solid',
-    borderColor: Colors.light,
-    borderWidth: 1,
-    color: Colors.light
+    color: Colors.offWhite,
+    padding: 10,
+    fontSize: 20
   },
   topLeftButton: {
     position: 'absolute',
