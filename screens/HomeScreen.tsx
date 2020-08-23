@@ -1,4 +1,4 @@
-import React, { Props } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.offWhite,
     position: 'absolute',
-    top: 50
+    top: 60
   },
   topLeftButton: {
     position: 'absolute',
