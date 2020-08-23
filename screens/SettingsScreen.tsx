@@ -28,7 +28,7 @@ export default ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.topLeftButton} onPress={saveSettingsAndGoBack}>
+      <TouchableOpacity style={styles.topRightButton} onPress={saveSettingsAndGoBack}>
         <Ionicons name="md-save" size={32} color={Colors.offWhite} />
       </TouchableOpacity>
       <Text style={styles.headerText}>Settings Screen</Text>
@@ -76,10 +76,10 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 20
   },
-  topLeftButton: {
+  topRightButton: {
     position: 'absolute',
     top: 30,
-    left: 20,
+    right: 20,
     height:32,
     width:32
   }

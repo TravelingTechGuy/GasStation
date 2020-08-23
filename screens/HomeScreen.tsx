@@ -8,7 +8,7 @@ import Colors from '../config/colors';
 export default ({navigation, route}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.topLeftButton} onPress={() => navigation.navigate('Settings')}>
+      <TouchableOpacity style={styles.topRightButton} onPress={() => navigation.navigate('Settings')}>
         <Ionicons name="md-settings" size={32} color={Colors.offWhite} />
       </TouchableOpacity>
       <Text style={styles.headerText}>
@@ -35,10 +35,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 60
   },
-  topLeftButton: {
+  topRightButton: {
     position: 'absolute',
     top: 30,
-    left: 20,
+    right: 20,
     height:32,
     width:32
   }
