@@ -1,45 +1,23 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, Text} from 'react-native';
 
+import Screen from '../components/Screen';
 import GasPrice from '../components/GasPrice';
-import Colors from '../config/colors';
 
 export default ({navigation, route}) => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.topRightButton} onPress={() => navigation.navigate('Settings')}>
-        <Ionicons name="md-settings" size={32} color={Colors.offWhite} />
-      </TouchableOpacity>
-      <Text style={styles.headerText}>
-        ⛽ Gas Prices (in <Text style={{fontStyle: 'italic'}}>gwei</Text>):
-      </Text>
+    <Screen
+      headerText={<>⛽ Gas Prices (in <Text style={styles.italic}>gwei</Text>):</>}
+      buttonIconName="md-settings"
+      buttonAction={() => navigation.navigate('Settings')}
+    >
       <GasPrice />
-    </View>
-  );
+    </Screen>
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignContent: 'center',
-    backgroundColor: Colors.dark,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerText: {
-    fontSize: 27,
-    textAlign: 'center',
-    color: Colors.offWhite,
-    position: 'absolute',
-    top: 60
-  },
-  topRightButton: {
-    position: 'absolute',
-    top: 30,
-    right: 20,
-    height:32,
-    width:32
+  italic: {
+    fontStyle: 'italic'
   }
 });

@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import SwitchSelector from 'react-native-switch-selector';
 import { Ionicons } from '@expo/vector-icons';
 
+import Screen from '../components/Screen';
 import useSettings from '../hooks/useSettings';
 import Colors from '../config/colors';
 
@@ -27,11 +28,11 @@ export default ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.topRightButton} onPress={saveSettingsAndGoBack}>
-        <Ionicons name="md-save" size={32} color={Colors.offWhite} />
-      </TouchableOpacity>
-      <Text style={styles.headerText}>Settings Screen</Text>
+    <Screen
+      headerText={<><Ionicons name='md-settings' size={24} color={Colors.offWhite} />  Settings Screen</>}
+      buttonIconName="md-save"
+      buttonAction={saveSettingsAndGoBack}
+    >
       <View style={styles.form}>
         <Text style={styles.text}>Would you like to auto refresh the prices:</Text>
         <SwitchSelector
@@ -43,30 +44,15 @@ export default ({navigation, route}) => {
           selectedColor={Colors.light}
         />
       </View>
-    </View>
+    </Screen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignContent: 'center',
-    backgroundColor: Colors.dark,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   form: {
     flexDirection: 'column',
     padding: 10,
     alignItems: 'center'
-  },
-  headerText: {
-    fontSize: 27,
-    textAlign: 'center',
-    color: Colors.offWhite,
-    position: 'absolute',
-    top: 60
   },
   switch: {
     width: '90%'
@@ -76,11 +62,4 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 20
   },
-  topRightButton: {
-    position: 'absolute',
-    top: 30,
-    right: 20,
-    height:32,
-    width:32
-  }
 });
