@@ -1,8 +1,10 @@
-import React, {useState, useEffect, Component} from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Table, Row, Rows } from 'react-native-table-component';
 import { Ionicons } from '@expo/vector-icons';
 
+import useSettings from '../hooks/useSettings';
+import {apiUri} from '../config/constants';
 import Colors from '../config/colors';
 
 interface Prices {
@@ -15,14 +17,16 @@ export default () => {
   const [prices, setPrices] = useState<Prices | null>(null);
   const [delta, setDelta] = useState<Prices | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [refreshInterval, setRefreshInterval] = useState<number>(0);
-  
+  const {settings} = useSettings();
+
+  let refreshInterval = 0;
+
   const getCurrentGasPrices = async () => {
     setLoading(true);
     try {
-      let start: number = Date.now();
-      let response = await fetch('https://ethgasstation.info/json/ethgasAPI.json');
-      console.log(Date.now() - start + ' ms');
+      // let start: number = Date.now();
+      let response = await fetch(apiUri);
+      // console.log(Date.now() - start + ' ms');
       let gas = await response.json();
       let newPrices: Prices = {
         low: gas.safeLow / 10,
@@ -47,16 +51,39 @@ export default () => {
     }
   };
   
-  // const startAutoRefresh = () => setRefreshInterval(setInterval(getCurrentGasPrices, 60 * 1000));
-  // const stopAutoRefresh = () => clearInterval(refreshInterval);
+  const startAutoRefresh = () => {
+    if(settings?.interval) {
+      refreshInterval = setInterval(getCurrentGasPrices, settings.interval  * 60 * 1000);
+    }
+    else {
+      stopAutoRefresh();
+    }
+  }
+  
+  const stopAutoRefresh = () => clearInterval(refreshInterval);
 
   useEffect(() => {
+    if(settings?.interval) {
+      startAutoRefresh();
+    }
+    else {
+      stopAutoRefresh();
+    }
     getCurrentGasPrices();
-    //startAutoRefresh();
-  }, []);
+  }, [settings]);
+
+  const getUpdateMessage = () => {
+    const now = new Date;
+    let msg = `Last updated: ${now.toLocaleTimeString()}`;
+    if(settings?.interval) {
+      now.setMinutes(now.getMinutes() + settings.interval);
+      msg += ` (next refresh at ${now.toLocaleTimeString()})`;
+    }
+    return msg;
+  }
 
   const getPrice = (key: keyof Prices) => 
-    <Text style={styles.text}>
+    <Text style={styles.textBody}>
       {prices && prices[key]}
       {
         delta && delta[key]
@@ -76,19 +103,19 @@ export default () => {
           <View>
             <Table borderStyle={{borderWidth: 2, borderColor: Colors.offWhite}}>
               <Row 
-                data={['Speed', 'Transaction completes in', 'Price']}
-                style={styles.head}
-                textStyle={styles.text}
+                data={['Speed', 'Estimated', 'Price']}
+                style={styles.header}
+                textStyle={styles.textHeader}
               />
               <Rows data={[
                   ['Fast',  '< 2 minutes', getPrice('high')],
                   ['Standard', '< 5 minutes', getPrice('medium')],
                   ['Low', '< 30 minutes', getPrice('low')]
                 ]} 
-                textStyle={styles.text}
+                textStyle={styles.textBody}
               />
             </Table>
-            <Text style={styles.time}>{`Last updated: ${(new Date).toLocaleTimeString()}`}</Text>
+            <Text style={styles.time}>{getUpdateMessage()}</Text>
           </View>
           :
           <Text style={styles.noResults}>No results yet... 😶</Text>
@@ -121,7 +148,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     width: '70%',
-    marginTop: 20
+    marginTop: 30
   },
   appButtonText: {
     fontSize: 18,
@@ -130,13 +157,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textTransform: 'uppercase'
   },
+  border: {
+    borderWidth: 2,
+    borderColor: Colors.offWhite
+  },
   container: {
     width: '100%',
     padding: 20,
     justifyContent: 'center'
   },
-  head: { 
-    height: 40,
+  header: { 
+    height: 60,
     backgroundColor: Colors.blue
   },
   loading: {
@@ -150,9 +181,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center'
   },
-  text: {
+  textHeader: {
     margin: 6,
-    color: Colors.light
+    color: Colors.light,
+    fontWeight: 'bold',
+    fontSize: 15,
+    padding: 10,
+    alignSelf: 'center'
+  },
+  textBody: {
+    margin: 6,
+    color: Colors.light,
+    fontSize: 15
   },
   time: {
     paddingTop: 10,
