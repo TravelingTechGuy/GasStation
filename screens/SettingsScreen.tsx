@@ -15,8 +15,8 @@ export default ({navigation, route}) => {
     { label: 'No', value: 0 },
     { label: '1 minute', value: 1 },
     { label: '5 minutes', value: 5 },
-    { label: '10 minutes', value: 10 },
-    { label: '3 minutes', value: 30 },
+    { label: '15 minutes', value: 15 },
+    { label: '30 minutes', value: 30 },
     { label: '1 hour', value: 60 },
   ];
 
