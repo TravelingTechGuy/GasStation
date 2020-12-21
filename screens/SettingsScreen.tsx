@@ -41,9 +41,7 @@ export default ({navigation, route}) => {
         <Picker
           selectedValue={api}
           style={styles.picker}
-          onValueChange={(itemValue, itemIndex) =>
-            setAPI(itemValue)
-          }>
+          onValueChange={(itemValue: APIs) => setAPI(itemValue)}>
           <Picker.Item value={APIs.EthGasStation} label={APIs.EthGasStation} />
           {/* <Picker.Item value={APIs.EthGasWatch} label={APIs.EthGasWatch} /> */}
           <Picker.Item value={APIs.GasNow} label={APIs.GasNow} />
