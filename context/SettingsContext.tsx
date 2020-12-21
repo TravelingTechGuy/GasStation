@@ -4,8 +4,8 @@ import {defaultSettings} from '../config/constants';
 
 const SettingsContext = createContext(null);
 
-export const SettingsProvider = ({ children, settings }) => {
-  const [currentSettings, setCurrentSettings] = useState(settings || defaultSettings);
+export const SettingsProvider = ({ children }) => {
+  const [currentSettings, setCurrentSettings] = useState(undefined);
 
   useEffect(() => {
     const fetch = async () => {

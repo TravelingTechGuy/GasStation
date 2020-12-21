@@ -3,19 +3,13 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Table, Row, Rows } from 'react-native-table-component';
 import { Ionicons } from '@expo/vector-icons';
 
+import {callApi, IPricesResult} from '../logic/api';
 import useSettings from '../hooks/useSettings';
-import {apiUri} from '../config/constants';
 import Colors from '../config/colors';
 
-interface Prices {
-  low: number,
-  medium: number,
-  high: number
-};
-
 export default () => {
-  const [prices, setPrices] = useState<Prices | null>(null);
-  const [delta, setDelta] = useState<Prices | null>(null);
+  const [prices, setPrices] = useState<IPricesResult | null>(null);
+  const [delta, setDelta] = useState<IPricesResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const {settings} = useSettings();
 
@@ -24,20 +18,14 @@ export default () => {
   const getCurrentGasPrices = async () => {
     setLoading(true);
     try {
-      // let start: number = Date.now();
-      let response = await fetch(apiUri);
-      // console.log(Date.now() - start + ' ms');
-      let gas = await response.json();
-      let newPrices: Prices = {
-        low: gas.safeLow / 10,
-        medium: gas.average / 10,
-        high: gas.fast / 10
-      };
+      let newPrices: IPricesResult = await callApi(settings.api);
+      console.log(newPrices);
       if(prices) {
-        let newDelta: Prices = {
-          low: newPrices.low - prices.low,
-          medium: newPrices.medium - prices.medium,
-          high: newPrices.high - prices.high
+        let newDelta: IPricesResult = {
+          slow: newPrices.slow - prices.slow,
+          average: newPrices.average - prices.average,
+          fast: newPrices.fast - prices.fast,
+          faster: newPrices.faster - prices.faster
         };
         setDelta(newDelta);
       }
@@ -63,6 +51,9 @@ export default () => {
   const stopAutoRefresh = () => clearInterval(refreshInterval);
 
   useEffect(() => {
+    if(!settings) {
+      return; //settings haven't been loaded
+    }
     if(settings?.interval) {
       startAutoRefresh();
     }
@@ -82,7 +73,7 @@ export default () => {
     return msg;
   }
 
-  const getPrice = (key: keyof Prices) => 
+  const getPrice = (key: keyof IPricesResult) => 
     <Text style={styles.textBody}>
       {prices && prices[key]}
       {
@@ -108,13 +99,15 @@ export default () => {
                 textStyle={styles.textHeader}
               />
               <Rows data={[
-                  ['Fast',  '< 2 minutes', getPrice('high')],
-                  ['Standard', '< 5 minutes', getPrice('medium')],
-                  ['Low', '< 30 minutes', getPrice('low')]
+                  ['Low', '< 10 minutes', getPrice('slow')],
+                  ['Average',  '< 3 minutes', getPrice('average')],
+                  ['Fast', '< 1 minute', getPrice('fast')],
+                  ['Rapid', '< 15 seconds', getPrice('faster')]
                 ]} 
                 textStyle={styles.textBody}
               />
             </Table>
+            <Text style={styles.textBody}>Using: {settings.api}</Text>
             <Text style={styles.time}>{getUpdateMessage()}</Text>
           </View>
           :
