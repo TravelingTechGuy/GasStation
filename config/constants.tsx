@@ -18,10 +18,10 @@ export const URIs: IUri[] = [
     id: APIs.EthGasStation,
     uri: 'https://ethgasstation.info/json/ethgasAPI.json'
   },
-  {
-    id: APIs.EthGasWatch,
-    uri: 'https://ethgas.watch/api/gas'
-  },
+  // {
+  //   id: APIs.EthGasWatch,
+  //   uri: 'https://ethgas.watch/api/gas'
+  // },
 ];
 
 
